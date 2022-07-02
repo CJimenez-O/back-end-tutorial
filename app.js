@@ -1,4 +1,6 @@
-//  -------- GLOBALS --------
+// ==========================
+// --------- GLOBALS --------
+// ==========================
 
 // __dirname   -path to current directory
 // __filename  -file name 
@@ -76,17 +78,68 @@ readFile('./pathModEx/first.txt', 'utf-8', (err, result) =>{
 
 // ---- HTTP Built-in Module
 const http = require('http');
-const server = http.createServer((req,res) => {
-    if(req.url === '/'){
-        res.end("Welcome to our HomePage");
-    }
-    if(req.url === '/about'){
-        res.end("Welcome to our AboutPage");
-    }
-    
-    res.end(`<h1> 404 </h1>`);
-})
 
-server.listen(5000);
+// const server = http.createServer((req,res) => {
+//     if(req.url === '/'){
+//         res.end("Welcome to our HomePage");
+//     }
+//     if(req.url === '/about'){
+//         res.end("Welcome to our AboutPage");
+//     }
+    
+//     res.end(`<h1> 404 </h1>`);
+// })
+
+// server.listen(5000);
+
+
+// ===================
+// ======= npm =======
+// ===================
+
+// to use nodemon type: npm run dev OR nodemon app.js
+// global package install: npm install -g <packageName>
+//uninstall package: npm uninstall <packageName>
+
+// ===================
+// ==== event loop ===
+// ===================
+
+// console.log('first');
+setTimeout(()=>{
+    // console.log('second')    // runs last due to setTimeout function being offloaded
+}, 0);
+// console.log('third');
+
+
+// ======================
+// ==== async pattern ===
+// ======================
+
+
+const getText = (path) => {
+    return new Promise((resolve, reject) =>{
+        readFile(path, 'utf-8', (err, data) =>{
+            if(err){
+                reject(err)
+            }else{
+                resolve(data)
+            }
+        })
+    })
+}
+
+const start = async() =>{
+    try{
+        const first = await getText('./pathModEx/first.txt');
+        const second = await getText('./pathModEx/second.txt');
+        console.log(first);
+    }catch(err){
+        console.log(error)
+    }
+}
+
+start();
+
 
 
