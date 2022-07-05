@@ -129,11 +129,28 @@ const getText = (path) => {
     })
 }
 
+// const start = async() =>{
+//     try{
+//         const first = await getText('./pathModEx/first.txt');
+//         const second = await getText('./pathModEx/second.txt');
+//         console.log(first);
+//     }catch(err){
+//         console.log(error)
+//     }
+// }
+
+// start();
+
+
+// node async native option  
+const util = require('util');
+const readFilePromise = util.promisify(readFile);
+
 const start = async() =>{
     try{
-        const first = await getText('./pathModEx/first.txt');
-        const second = await getText('./pathModEx/second.txt');
-        console.log(first);
+        const first = await readFilePromise('./pathModEx/first.txt', 'utf8');
+        const second = await readFilePromise('./pathModEx/second.txt', 'utf8');
+        // console.log(first);
     }catch(err){
         console.log(error)
     }
@@ -142,4 +159,51 @@ const start = async() =>{
 start();
 
 
+
+// ======================
+// ==== Event-Driven ====
+// ======================
+
+const EventEmitter = require('events');
+const customEmmitrer = new EventEmitter();
+
+// on - listen for an event
+// emit - emit an event
+
+customEmmitrer.on('response', (name, id)=>{
+    // console.log(`data received: ${name} ${id}`)
+});
+
+customEmmitrer.emit('response', 'Chris', 97);
+
+
+// ======================
+// ====== Streams =======
+// ======================
+
+// read file
+// used since sometimes files will be too large to assign to a variable 
+
+const {createReadStream} = require('fs');
+const stream = createReadStream('./pathModEx/second.txt', {encoding: 'utf8'}) ;
+
+stream.on('data', (result)=>{
+    // console.log(result);
+})
+stream.on('error', (err)=>{
+    // console.log(err)
+})
+
+// http example 
+const fs = require('fs')
+http.createServer(function(req, res){
+    const fileStream = fs.createReadStream('./pathModEx/first.txt');
+    fileStream.on('open', ()=>{
+        // pushing from read to write stream
+        fileStream.pipe(res)
+    })
+    fileStream.on('error', (err)=>{
+        res.on(err)
+    })
+}).listen(3000);
 
